@@ -1,0 +1,151 @@
+<html lang="ru">
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="lib/style.css" type="text/css"/>
+    <script src="lib/array-hacks.js"></script>
+    <script src="lib/canvas-hacks.js"></script>
+    <script src="lib/modelling-staff.js"></script>
+    <title>Моделирование</title>
+</head>
+<body>
+<div>
+    <canvas id="scene" width="800px" height="300px"></canvas>
+    <div class="data"></div>
+    <div class="inputs">
+        <div class="buttons">
+            <div onclick="launch();">Запустить</div>
+            <div onclick="reset();">Очистить</div>
+            <div onclick="pause();">Приостановить</div>
+            <div onclick="resume();">Продолжить</div>
+        </div>
+    </div>
+    <div id="graphs" style="margin: auto; width: fit-content;"></div>
+    <script>
+        let renderContext = document.getElementById("scene").getContext("2d");
+
+        onReset();
+
+        function onReset() {
+            for (let key in context.graphs) {
+                context.graphs[key].points = [];
+            }
+
+            initialize();
+            render();
+        }
+
+        function initialize() {
+            renderContext.reset();
+            renderContext.invertY();
+            renderContext.activeZone({
+                fraction: 0.8,
+                minX: 0, maxX: 10,
+                minY: 0, maxY: 1,
+            });
+        }
+
+        function render() {
+            renderContext.clear();
+            renderContext.lineWidth = 0.02;
+
+            let lastGraph = context.graphs.last();
+            if (lastGraph !== undefined) {
+                let lastPoint = lastGraph.points.last();
+                if (lastPoint !== undefined)
+                    renderContext.follow(lastPoint[0], lastPoint[1]);
+            }
+            
+            for (let key in context.graphs) {
+                let graph = context.graphs[key];
+                renderContext.strokeStyle = graph.color;
+                renderContext.drawPath(graph.points);
+            }
+
+            renderContext.strokeStyle = "#000";
+
+            renderContext.drawLine(0, -1000, 0, 1000);
+            renderContext.drawLine(-1000, 0, 1000, 0);
+        }
+
+        function launch() {
+            connection.invoke("launch").catch(onError);
+        }
+
+        function reset() {
+            connection.invoke("reset").catch(onError);
+        }
+
+        function pause() {
+            connection.invoke("pause").catch(onError);
+        }
+
+        function resume() {
+            connection.invoke("resume").catch(onError);
+        }
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/hub")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        connection.on("CreateInputView", (label, parameterName, value) => {
+            createControlView(label, parameterName, value, (parameterName, value) =>
+                connection.invoke("InputData", parameterName, value).catch(onError)
+            );
+        });
+        connection.on("CreateDataView", createDataView);
+        connection.on("CreateGraph", (id, color) => {
+            context.graphs[id] = {
+                color: color,
+                points: [],
+                push: function (x, y) {
+                    this.points.push([x, y]);
+                    if (this.points.length > 500) {
+                        this.points = this.points.slice(250);
+                    }
+                }
+            };
+        });
+
+        connection.on("Popup", (message) => alert(message));
+        connection.on("ConsoleLog", console.log);
+        connection.on("OnReset", onReset);
+        connection.on("UpdateData", function (parameterName, value) {
+            context.data[parameterName].innerText = digits(value, 100);
+        });
+        connection.on("GraphAddPoint", (updates) => {
+            for (let update of updates) {
+                let graph = context.graphs[update.id];
+                graph.push(update.x, update.y);
+            }
+            render();
+        });
+
+        function onError(err) {
+            return console.error(err.toString());
+        }
+
+        async function start() {
+            try {
+                await connection.start();
+                console.log("SignalR Connected.");
+            } catch (err) {
+                console.log(err);
+                setTimeout(start, 5000);
+            }
+        }
+        
+        async function requestUI() {
+            connection.invoke("requestUI").catch(onError);
+        }
+
+        connection.onclose(async () => {
+            await start();
+        });
+
+        start().then(requestUI);
+    </script>
+</div>
+</body>
+</html>

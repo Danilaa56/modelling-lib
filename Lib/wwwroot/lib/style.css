@@ -1,0 +1,75 @@
+html {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    text-align: center;
+}
+
+canvas {
+    border: #222222 1px solid;
+    border-radius: 0.56em;
+}
+
+.canvas-graph {
+    margin: 28px;
+}
+
+.data {
+    margin: auto;
+    width: fit-content;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.dataHolder {
+    display: flex;
+    width: 500px;
+    justify-content: space-between;
+    margin: 5px;
+}
+
+.inputs {
+    background-color: #222;
+    border: black solid 2px;
+    border-radius: 12px;
+    padding: 6px;
+    display: inline-block;
+    text-align: right;
+    color: white;
+    text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, -2px 0 0 #000, 2px 0 0 #000;
+    font-weight: bold;
+    user-select: none;
+}
+
+.buttons {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.buttons div, input {
+    background-color: white;
+    border: black solid 1px;
+    border-radius: 0.5em;
+    height: 40px;
+    margin: 6px;
+    padding: 10px;
+    font-size: 18px;
+    line-height: 18px;
+    box-sizing: border-box;
+    text-shadow: none;
+    color: black;
+    outline: none;
+}
+
+.buttons div {
+    cursor: pointer;
+}
+
+.buttons div:hover {
+    background-color: #ddd;
+}
+
+.inputLabel {
+    font-size: 18px;
+    display: inline-block;
+    text-align: right;
+    margin: 5px;
+}

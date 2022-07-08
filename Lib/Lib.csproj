@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>Modelling.Lib</RootNamespace>
+        <OutputType>Library</OutputType>
+        <AssemblyName>Modelling.Lib</AssemblyName>
+        <PackageId>Modelling.Lib</PackageId>
+        <Authors>Danilaa56</Authors>
+        <Company>Modelling.Lib</Company>
+        <Product>Modelling.Lib</Product>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+      <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.5" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="wwwroot\index.html">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="wwwroot\lib\style.css">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="wwwroot\lib\modelling-staff.js">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="wwwroot\lib\canvas-hacks.js">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Update="wwwroot\lib\array-hacks.js">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+</Project>
