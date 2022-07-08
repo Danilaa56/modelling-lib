@@ -1,4 +1,4 @@
 ﻿using Modelling.Example;
 using Modelling.Lib;
 
-ModellingStartup.Start(provider => new DipoleExperiment(provider), args);
+ModellingStartup.Start(args, provider => new DipoleExperiment(provider));

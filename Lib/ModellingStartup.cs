@@ -7,7 +7,7 @@ public static class ModellingStartup
 {
     private static Func<IServiceProvider, Experiment> _factory = null!;
 
-    public static void Start(Func<IServiceProvider, Experiment> factory, string[] args)
+    public static void Start(string[] args, Func<IServiceProvider, Experiment> factory)
     {
         _factory = factory;
         Host.CreateDefaultBuilder(args)
